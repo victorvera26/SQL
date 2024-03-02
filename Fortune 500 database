@@ -1,4 +1,4 @@
-#This analysis utilized the following Fortune 500 dataset:
+This analysis utilized the following Fortune 500 dataset:
 
 CREATE TABLE fortune_companies (
     company_id INTEGER PRIMARY KEY,
@@ -57,3 +57,47 @@ VALUES
     ('Company II', 'Telecommunications', 110.5, 2000, 1, 21, 12, 4.9),
     ('Company JJ', 'Manufacturing', 370.0, 3100, 1, 20, 12, 7.6),
     ('Company KK', 'Healthcare', 150.2, 3400, 0, 16, 8, 5.3);
+
+1. List all the companies on how mother friendly they are, rating their maternity leave in Excellent, Good, Bad
+
+SELECT company_name,
+CASE WHEN maternity_leave_weeks >=10 THEN "Excellent"
+WHEN maternity_leave_weeks >=6 THEN "Good"
+ELSE "Bad"
+END AS mother_friendliness
+FROM fortune_companies;
+
+2. Order the industries from highest to lowest average revenue in billions of dollars
+
+SELECT industry, ROUND(AVG(revenue),1) AS avg_revenue_billions
+FROM fortune_companies
+GROUP BY industry
+HAVING avg_revenue_billions >200
+ORDER BY avg_revenue_billions desc;
+
+3. Show all the companies that had both healthcare benefits and 20 or more paid time off days.
+
+SELECT company_name
+FROM fortune_companies
+WHERE healthcare_benefits=1
+AND paid_time_off_days >=20;
+
+4. Show which company, inside the retail industry had the lowest revenue.
+
+SELECT company_name, MIN(revenue)
+from fortune_companies
+WHERE industry="Retail";
+
+5. Show which company had the highest revenue and offered healthcare benefits
+
+SELECT company_name, max(revenue)
+FROM fortune_companies
+WHERE healthcare_benefits=1
+
+6. Show which companies offered or not healthcare benefits and show whether you should consider or not consider
+
+SELECT company_name,
+CASE WHEN healthcare_benefits=1 THEN "Consider"
+ELSE "Do not consider"
+END AS consider_company
+FROM fortune_companies;
